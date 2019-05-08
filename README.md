@@ -21,14 +21,14 @@ get_path("my-computer", "share")
 >>> D:\\
 
 # from Unix machine with Samba mount in /mnt without share
-get_path("my-computer")
+get_path("server")
 >>> /mnt/server
 
 # from Unix machine with Samba mount in /mnt with share
-get_path("my-computer", "share")
+get_path("server", "share")
 >>> /mnt/server/share
 
 # from Unix machine with mount in custom path
-get_path("my-computer", "share", unix_path_prefix="/mymount")
+get_path("server", "share", unix_path_prefix="/mymount")
 >>> /mymount/server/share
 ```
