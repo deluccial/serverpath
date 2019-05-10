@@ -97,6 +97,7 @@ def __get_local_drive_with_share(share_name: str) -> Union[str, None]:
 def get_path(
         server_name: str,
         share_name: str = "",
+        exclude_drives: bool = False,
         unix_path_prefix: str = "/mnt"
 ) -> Path:
     """
@@ -114,22 +115,24 @@ def get_path(
 
     :param server_name: name of server
     :param share_name: name of shared drive on server
+    :param exclude_drives: whether to exclude mounted drives (Windows only) -- will return \\server\share always if True
     :param unix_path_prefix: path prefix where shares are mounted if on unix machine (default assumes Samba shares)
     :return: Path object containing full path to share on server
     """
     if platform.system() == 'Windows':
         if not share_name == "":
-            # if the host name is the same as the server name, that means that this is a shared network drive, so figure
-            # out which lettered drive it is
-            if platform.node().lower() == server_name.lower():
-                local = __get_local_drive_with_share(share_name=share_name)
-                if local:
-                    return Path(r"{}:\\".format(local))
-            else:
-                # attempt to get find mapped network drive
-                net = __get_network_drive_with_share(server_name=server_name, share_name=share_name)
-                if net:
-                    return Path(r"{}:\\".format(net))     # use the drive letter
+            if not exclude_drives:
+                # if the host name is the same as the server name, that means that this is a shared network drive, so
+                # figure out which lettered drive it is
+                if platform.node().lower() == server_name.lower():
+                    local = __get_local_drive_with_share(share_name=share_name)
+                    if local:
+                        return Path(r"{}:\\".format(local))
+                else:
+                    # attempt to get find mapped network drive
+                    net = __get_network_drive_with_share(server_name=server_name, share_name=share_name)
+                    if net:
+                        return Path(r"{}:\\".format(net))     # use the drive letter
             # if mapped network drive or local drive for this server and share is not found,
             # just return full Windows server path
             return Path(r'\\{}\{}'.format(server_name, share_name))
