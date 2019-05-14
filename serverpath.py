@@ -4,26 +4,30 @@ import platform
 import subprocess
 from typing import Union
 from pathlib import Path
-from ctypes import wintypes, windll
+
+if platform.system() == 'Windows':
+    from ctypes import wintypes, windll
 
 """
 Platform-independent server-share path discovery.
 """
 
-mpr = ctypes.WinDLL('mpr')
+if platform.system() == 'Windows':
+    mpr = ctypes.WinDLL('mpr')
 
-ERROR_SUCCESS = 0x0000
-ERROR_MORE_DATA = 0x00EA
+    ERROR_SUCCESS = 0x0000
+    ERROR_MORE_DATA = 0x00EA
 
-wintypes.LPDWORD = ctypes.POINTER(wintypes.DWORD)
-mpr.WNetGetConnectionW.restype = wintypes.DWORD
-mpr.WNetGetConnectionW.argtypes = (wintypes.LPCWSTR,
-                                   wintypes.LPWSTR,
-                                   wintypes.LPDWORD)
+    wintypes.LPDWORD = ctypes.POINTER(wintypes.DWORD)
+    mpr.WNetGetConnectionW.restype = wintypes.DWORD
+    mpr.WNetGetConnectionW.argtypes = (wintypes.LPCWSTR,
+                                       wintypes.LPWSTR,
+                                       wintypes.LPDWORD)
 
 
 def __get_drives() -> list:
     """
+    WINDOWS-SPECIFIC FUNCTION
     Gets all available mapped drive letters.
     https://stackoverflow.com/questions/827371/is-there-a-way-to-list-all-the-available-drive-letters-in-python?answertab=oldest#tab-top
     :return: list of available drive letters
@@ -39,6 +43,7 @@ def __get_drives() -> list:
 
 def __get_connection(drive_letter: str, debug: bool = False) -> Union[str, None]:
     """
+    WINDOWS-SPECIFIC FUNCTION
     Get full connection name from mapped drive letter.
     https://stackoverflow.com/questions/34801315/get-full-computer-name-from-a-network-drive-letter-in-python
     :param drive_letter: mapped drive letter
@@ -81,6 +86,7 @@ def __get_network_drive_with_share(server_name: str, share_name: str) -> Union[s
 
 def __get_local_drive_with_share(share_name: str) -> Union[str, None]:
     """
+    WINDOWS-SPECIFIC FUNCTION
     Get a local drive letter given a share name.
     ex. \\my-computer\share -> D if (D:\\ == \\my-computer\share)
     :param share_name: name of share to search for
