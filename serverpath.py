@@ -1,6 +1,7 @@
 import string
 import ctypes
 import platform
+import warnings
 import subprocess
 from typing import Union
 from pathlib import Path
@@ -141,13 +142,21 @@ def get_path(
                         return Path(r"{}:\\".format(net))     # use the drive letter
             # if mapped network drive or local drive for this server and share is not found,
             # just return full Windows server path
-            return Path(r'\\{}\{}'.format(server_name, share_name))
+            path = Path(r'\\{}\{}'.format(server_name, share_name))
+            if not path.exists():
+                warnings.warn(f"Inferred server path - {path} - does not exist. Returning anyway, but make sure "
+                              f"the server and share are named correctly and available on the network.")
+            return path
         else:
             raise ValueError("Must specify share name if on Windows machine and accessing external server.")
     else:
         if platform.node() == server_name:
-            return Path('/{}'.format(share_name))
-        if share_name == "":
-            return Path('{}/{}'.format(unix_path_prefix, server_name))
+            path = Path('/{}'.format(share_name))
+        elif share_name == "":
+            path = Path('{}/{}'.format(unix_path_prefix, server_name))
         else:
-            return Path('{}/{}/{}'.format(unix_path_prefix, server_name, share_name))
+            path = Path('{}/{}/{}'.format(unix_path_prefix, server_name, share_name))
+        if not path.exists():
+            warnings.warn(f"Inferred server path - {path} - does not exist. Returning anyway, but make sure "
+                          f"the unix path prefix is defined correctly and that your server is mounted correctly.")
+        return path

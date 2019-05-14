@@ -8,7 +8,7 @@ setuptools.setup(
 
     name='serverpath',
 
-    version='0.1.2',
+    version='0.1.3',
 
     author="Luke DeLuccia",
 
