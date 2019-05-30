@@ -144,8 +144,10 @@ def get_path(
             # just return full Windows server path
             path = Path(r'\\{}\{}'.format(server_name, share_name))
             if not path.exists():
-                warnings.warn(f"Inferred server path - {path} - does not exist. Returning anyway, but make sure "
-                              f"the server and share are named correctly and available on the network.")
+                warnings.warn(UserWarning(
+                    "Inferred server path - " + str(path) +
+                    " - does not exist. Returning anyway, but make sure the server and share are named "
+                    "correctly and available on the network."))
             return path
         else:
             raise ValueError("Must specify share name if on Windows machine and accessing external server.")
@@ -157,6 +159,8 @@ def get_path(
         else:
             path = Path('{}/{}/{}'.format(unix_path_prefix, server_name, share_name))
         if not path.exists():
-            warnings.warn(f"Inferred server path - {path} - does not exist. Returning anyway, but make sure "
-                          f"the unix path prefix is defined correctly and that your server is mounted correctly.")
+            warnings.warn(UserWarning(
+                "Inferred server path - " + str(path) +
+                " - does not exist. Returning anyway, but make sure the unix path prefix is defined "
+                "correctly and that your server is mounted correctly."))
         return path
