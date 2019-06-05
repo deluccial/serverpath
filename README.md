@@ -1,3 +1,10 @@
+[![](https://img.shields.io/pypi/v/serverpath.svg?style=flat-square)](https://pypi.org/project/serverpath)
+[![](https://img.shields.io/pypi/pyversions/serverpath.svg?style=flat-square&logo=python)](https://pypi.org/project/serverpath)
+[![](https://img.shields.io/pypi/l/serverpath.svg?style=flat-square)](https://pypi.org/project/serverpath)
+[![](https://img.shields.io/pypi/wheel/serverpath.svg?style=flat-square)](https://pypi.org/project/serverpath)
+[![](https://img.shields.io/github/last-commit/deluccial/serverpath.svg?style=flat-square)](https://github.com/deluccial/serverpath/commits)
+[![](https://img.shields.io/github/languages/code-size/deluccial/serverpath.svg?style=flat-square)](https://github.com/deluccial/serverpath)
+
 Platform-independent server-share path discovery.
 
 To install:
